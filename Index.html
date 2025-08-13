@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tickety - Discord Ticket Bot</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#faq">FAQ</a></li>
                 <li id="nav-user-menu-container">
-                    <a id="nav-login-btn" href="/login" class="cta">Login</a>
+                    <a id="nav-login-btn" href="https://discord.com/oauth2/authorize?client_id=1404896235785293925&response_type=code&redirect_uri=https%3A%2F%2Fstudious-enigma-jp6g7vv9qwwfrj7-5000.app.github.dev%2Fcallback&scope=identify+guilds" class="cta">Login</a>
                 </li>
             </ul>
         </nav>
@@ -97,7 +97,7 @@
                     heroContent.innerHTML = `
                         <h1>Effortless Discord Ticketing</h1>
                         <p>Manage support tickets in your Discord server with ease. Fast, simple, and free.</p>
-                        <a id="hero-login-btn" href="/login" class="cta">Login</a>
+                        <a id="hero-login-btn" href="https://discord.com/oauth2/authorize?client_id=1404896235785293925&response_type=code&redirect_uri=https%3A%2F%2Fzany-yodel-6x6p5qqw5473xq4-5000.app.github.dev%2Fcallback&scope=identify+guilds" class="cta">Login</a>
                     `;
                 }
             }
@@ -150,6 +150,22 @@
                         });
                 }
             }
+
+            // Function to load dashboard.html and replace the entire page
+            function loadDashboardFullPage() {
+                fetch('dashboard.html')
+                    .then(res => res.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        // Replace the entire <html> element
+                        document.replaceChild(
+                            document.importNode(doc.documentElement, true),
+                            document.documentElement
+                        );
+                    });
+            }
+
             document.body.addEventListener('click', function (e) {
                 const a = e.target.closest('a');
                 if (!a) return;
@@ -160,7 +176,7 @@
                 if (href && href.startsWith('/dashboard') && !a.hasAttribute('download') && !a.target) {
                     e.preventDefault();
                     history.pushState(null, '', href);
-                    ajaxNavigate(href);
+                    loadDashboardFullPage();
                 }
             });
             window.addEventListener('popstate', function () {

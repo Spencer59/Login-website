@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tickety Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
     <style>
         body {
             background: #181a20;
@@ -125,6 +125,36 @@
         </div>
         <div class="server-list" id="guildList"></div>
     </main>
+    <script>
+    async function fetchAndShowAllGuilds() {
+        try {
+            const res = await fetch('/user_guilds');
+            const guildList = document.getElementById('guildList');
+            if (!guildList) return;
+            if (!res.ok) {
+                const errorData = await res.json();
+                guildList.innerHTML = `<p style="color:#ff4b4b;">Error: ${errorData.error || 'Unknown error'}<br>${errorData.details || ''}</p>`;
+                return;
+            }
+            const data = await res.json();
+            const guilds = data.guilds || [];
+            if (guilds.length === 0) {
+                guildList.innerHTML = '<p style="color:#fff;">No servers found.</p>';
+                return;
+            }
+            guildList.innerHTML = guilds.map(g => `
+                <div class="server-card">
+                    <img class="server-avatar" src="${g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png'}" alt="Server Icon">
+                    <div class="server-name">${g.name}</div>
+                    <button class="manage-btn">Manage</button>
+                </div>
+            `).join('');
+        } catch (e) {
+            document.getElementById('guildList').innerHTML = `<p style="color:#ff4b4b;">Error: ${e.message}</p>`;
+        }
+    }
+    fetchAndShowAllGuilds();
+    </script>
 </body>
 
 </html>
