@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickety - Discord Ticket Bot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">Tickety</div>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li id="nav-user-menu-container">
+                    <a id="nav-login-btn" href="/login" class="cta">Login</a>
+                </li>
+            </ul>
+        </nav>
+        <section class="hero">
+
+            <div id="hero-content">
+                <h1>Effortless Discord Ticketing</h1>
+                <p>Manage support tickets in your Discord server with ease. Fast, simple, and free.</p>
+                <a id="hero-login-btn" href="/login" class="cta">Login</a>
+            </div>
+    </header>
+
+    <main>
+        <section id="features" class="features">
+            <h2>Features</h2>
+            <div class="feature-list">
+                <div class="feature">
+                    <h3>Easy Ticket Creation</h3>
+                    <p>Users can open tickets with a simple slash command.</p>
+                </div>
+                <div class="feature">
+                    <h3>Private Channels</h3>
+                    <p>Each ticket is a private channel for the user and staff.</p>
+                </div>
+                <div class="feature">
+                    <h3>Customizable</h3>
+                    <p>Change staff roles, categories, and more to fit your server.</p>
+                </div>
+                <div class="feature">
+                    <h3>Free & Open Source</h3>
+                    <p>Host it yourself or invite our public bot for free.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h4>How do I invite the bot?</h4>
+                    <p>Click the "Invite to Discord" button above and authorize the bot for your server.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Is it really free?</h4>
+                    <p>Yes! You can use the public bot or host your own instance.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I customize the bot?</h4>
+                    <p>Absolutely! The bot is open source and easy to configure.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tickety. Not affiliated with Discord Inc.</p>
+    </footer>
+    <script>
+        // Hide hero section if on /dashboard
+        function updateHeroVisibility() {
+            var hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.display = window.location.pathname.startsWith('/dashboard') ? 'none' : '';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            updateHeroVisibility();
+            // Dynamically update hero section content based on page
+            function updateHeroContent() {
+                var heroContent = document.getElementById('hero-content');
+                if (!heroContent) return;
+                if (window.location.pathname.startsWith('/dashboard')) {
+                    heroContent.innerHTML = `
+                        <h1>Select a Server</h1>
+                        <p>Please select a server to manage or add Tickety to it</p>
+                    `;
+                } else {
+                    heroContent.innerHTML = `
+                        <h1>Effortless Discord Ticketing</h1>
+                        <p>Manage support tickets in your Discord server with ease. Fast, simple, and free.</p>
+                        <a id="hero-login-btn" href="/login" class="cta">Login</a>
+                    `;
+                }
+            }
+            updateHeroContent();
+            // SPA-like navigation for dashboard links only, login button always reloads
+            function ajaxNavigate(url) {
+                // If navigating to /dashboard, load dashboard.html and replace the entire <html>
+                if (url.startsWith('/dashboard')) {
+                    fetch('dashboard.html')
+                        .then(res => res.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newHtml = doc.documentElement;
+                            if (newHtml) {
+                                document.replaceChild(newHtml, document.documentElement);
+                                // Re-inject dashboard.js as module to ensure latest fetchGuilds is available
+                                const oldScript = document.querySelector('script[src$="dashboard.js"]');
+                                if (oldScript) oldScript.remove();
+                                const script = document.createElement('script');
+                                script.type = 'module';
+                                script.src = '/static/dashboard.js';
+                                document.head.appendChild(script);
+                                // After dashboard.js loads, call fetchGuilds again
+                                script.onload = () => {
+                                    if (window.fetchGuilds) window.fetchGuilds();
+                                };
+                            }
+                        });
+                } else {
+                    fetch(url)
+                        .then(res => res.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newMain = doc.querySelector('main');
+                            if (newMain) {
+                                document.querySelector('main').replaceWith(newMain);
+                                window.scrollTo(0, 0);
+                            }
+                            doc.querySelectorAll('script').forEach(script => {
+                                if (!script.src && script.textContent) {
+                                    const s = document.createElement('script');
+                                    s.textContent = script.textContent;
+                                    document.body.appendChild(s);
+                                    setTimeout(() => s.remove(), 100);
+                                }
+                            });
+                            updateHeroVisibility();
+                        });
+                }
+            }
+            document.body.addEventListener('click', function (e) {
+                const a = e.target.closest('a');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                // If it's the login button, allow default (full reload)
+                if (a.id === 'nav-login-btn' || a.id === 'hero-login-btn') return;
+                // Only intercept /dashboard links (and not download/target)
+                if (href && href.startsWith('/dashboard') && !a.hasAttribute('download') && !a.target) {
+                    e.preventDefault();
+                    history.pushState(null, '', href);
+                    ajaxNavigate(href);
+                }
+            });
+            window.addEventListener('popstate', function () {
+                if (location.pathname.startsWith('/dashboard')) {
+                    ajaxNavigate(location.pathname);
+                } else {
+                    updateHeroVisibility();
+                }
+            });
+        });
+    </script>
+    <script>
+        // Check login status and update nav if logged in, but only if not on /dashboard
+        if (!window.location.pathname.startsWith('/dashboard')) {
+            (async function () {
+                try {
+                    const res = await fetch('/user_guilds');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.user) {
+                            // User is logged in, update nav and hero button
+                            const user = data.user;
+                            // Avatar URL
+                            let avatarUrl = user.avatar
+                                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                                : `https://cdn.discordapp.com/embed/avatars/0.png`;
+                            // Dropdown HTML
+                            const menuHtml = `
+                            <div class="user-dropdown" style="position:relative;">
+                                <button id="user-menu-btn" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;">
+                                    <img src="${avatarUrl}" alt="avatar" style="width:36px;height:36px;border-radius:50%;border:2px solid #5865f2;">
+                                    <span style="color:#fff;font-weight:bold;">${user.username}</span>
+                                    <span style="color:#fff;">&#9662;</span>
+                                </button>
+                                <div id="user-menu-dropdown" style="display:none;position:absolute;top:48px;right:0;background:#23272a;border-radius:12px;box-shadow:0 2px 8px #0004;min-width:180px;z-index:100;overflow:hidden;">
+                                    <a href="/dashboard" style="display:block;padding:1rem 1.5rem;color:#fff;text-decoration:none;">Dashboard</a>
+                                    <a href="/support" style="display:block;padding:1rem 1.5rem;color:#fff;text-decoration:none;">Support</a>
+                                    <a href="/premium" style="display:block;padding:1rem 1.5rem;color:#fff;text-decoration:none;">&#128142; Premium</a>
+                                    <a href="/logout" style="display:block;padding:1rem 1.5rem;color:#ff4b4b;text-decoration:none;font-weight:bold;">&#128682; Logout</a>
+                                </div>
+                            </div>`;
+                            document.getElementById('nav-user-menu-container').innerHTML = menuHtml;
+                            // Hero button
+                            document.getElementById('hero-login-btn').textContent = 'Dashboard';
+                            document.getElementById('hero-login-btn').href = '/dashboard';
+                            // Dropdown toggle
+                            setTimeout(() => {
+                                const btn = document.getElementById('user-menu-btn');
+                                const dropdown = document.getElementById('user-menu-dropdown');
+                                if (btn && dropdown) {
+                                    btn.addEventListener('click', function (e) {
+                                        e.stopPropagation();
+                                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                                    });
+                                    document.addEventListener('click', function () {
+                                        dropdown.style.display = 'none';
+                                    });
+                                }
+                            }, 100);
+                        }
+                    }
+                } catch (e) {
+                    // Not logged in or error, do nothing
+                }
+            })();
+        }
+    </script>
+</body>
+
+</html>

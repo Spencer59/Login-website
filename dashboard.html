@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script type="module" src="/static/dashboard.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickety Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: #181a20;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #181a20;
+            padding: 1.2rem 2vw;
+            border-radius: 20px;
+            margin: 2rem auto 2.5rem auto;
+            max-width: 1200px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin: 3rem 0 2rem 0;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: #b9bbbe;
+            font-size: 1.2rem;
+        }
+
+        .server-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto 3rem auto;
+        }
+
+        .server-card {
+            background: #23272a;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px #0002;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .server-card:hover {
+            box-shadow: 0 4px 16px #0004;
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        .server-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            margin-bottom: 1.2rem;
+            background: #181a20;
+            object-fit: cover;
+        }
+
+        .server-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .server-card .manage-btn,
+        .server-card .invite-btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: auto;
+            transition: background 0.2s;
+        }
+
+        .server-card .manage-btn {
+            background: #5865f2;
+            color: #fff;
+        }
+
+        .server-card .manage-btn:hover {
+            background: #4752c4;
+        }
+
+        .server-card .invite-btn {
+            background: #23272a;
+            color: #fff;
+            border: 2px solid #5865f2;
+        }
+
+        .server-card .invite-btn:hover {
+            background: #5865f2;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="dashboard-nav">
+        <span style="color:#fff;font-weight:bold;font-size:1.3rem;">Tickety Dashboard</span>
+    </nav>
+    <main>
+        <div class="dashboard-header">
+            <h1>Select a Server</h1>
+            <p>Please select a server to manage or add Tickety to it</p>
+        </div>
+        <div class="server-list" id="guildList"></div>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #181a20;
+    color: #fff;
+}
+
+header {
+    background: linear-gradient(135deg, #5865f2 0%, #23272a 100%);
+    padding-bottom: 2rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3vw;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav {
+background: #181a20 !important;
+}
+
+nav a.cta {
+    background: #5865f2;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px #23272a44;
+    transition: background 0.2s;
+}
+
+nav a.cta:hover {
+    background: #4752c4;
+}
+
+.hero {
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+}
+
+.hero .cta {
+    font-size: 1.1rem;
+    padding: 0.7rem 2rem;
+}
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.features {
+    margin-bottom: 3rem;
+}
+
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature {
+    background: #23272a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px #0002;
+    text-align: center;
+}
+
+.feature h3 {
+    color: #5865f2;
+    margin-bottom: 0.7rem;
+}
+
+.faq {
+    margin-bottom: 3rem;
+}
+
+.faq-list {
+    margin-top: 2rem;
+}
+
+.faq-item {
+    background: #23272a;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px #0002;
+}
+
+.faq-item h4 {
+    color: #5865f2;
+    margin-bottom: 0.5rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 0 1rem 0;
+    color: #aaa;
+    font-size: 1rem;
+    background: #181a20;
+}
