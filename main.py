@@ -16,7 +16,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
 
 # Discord OAuth2 credentials (set these as environment variables)
 DISCORD_CLIENT_ID = os.environ.get("DISCORD_CLIENT_ID", "1404896235785293925")
-DISCORD_CLIENT_SECRET = os.environ.get("DISCORD_CLIENT_SECRET", "dI73tzXa8pbUJvuELFcVRpiKBPQORnR6")
+DISCORD_CLIENT_SECRET = os.environ.get("DISCORD_CLIENT_SECRET")
 DISCORD_REDIRECT_URI = os.environ.get("DISCORD_REDIRECT_URI", "https://studious-enigma-jp6g7vv9qwwfrj7-5000.app.github.dev/callback")
 
 DISCORD_API_BASE_URL = "https://discord.com/api"
